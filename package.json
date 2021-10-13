@@ -1,0 +1,12 @@
+{
+  "name": "store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Shayan M",
+  "license": "ISC"
+}

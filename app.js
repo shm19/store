@@ -6,6 +6,10 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config({ path: path.join(__dirname, 'config.env') });
 
+const globalErrorHandler = require('./controller/errorController');
+const AppError = require('./utils/appError');
+const apiRouter = require('./routes/apiRoutes');
+
 const app = express();
 
 app.use(morgan('dev'));
@@ -16,10 +20,20 @@ app.use(cookieParser());
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views')); //not nessecerry
 
-// api router
+app.use('', (req, res, next) => {
+  res.locals.page = req.query.page || 1;
+  req.requestedAt = `${new Date().toLocaleTimeString()} - ${new Date().toLocaleDateString()}}`;
+  next();
+});
 
-// view router
+app.use('/api/v1', apiRouter);
 
-// handle global errors
+app.all('*', (req, res, next) =>
+  next(
+    new AppError(`Can't find any routes for ${req.originalUrl} on server`, 404)
+  )
+);
+
+app.use(globalErrorHandler);
 
 module.exports = app;

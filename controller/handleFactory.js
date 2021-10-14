@@ -16,9 +16,11 @@ const checkAndSend = (req, res, next, doc) => {
   });
 };
 
-module.exports.getOne = Model =>
+module.exports.getOne = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id);
+    const query = Model.findById(req.params.id);
+    populateOptions.forEach(el => query.populate(el));
+    const doc = await query;
     checkAndSend(req, res, next, doc);
   });
 
@@ -52,7 +54,7 @@ module.exports.createOne = Model =>
       status: 'success',
       requestedAt: req.requestedAt,
       data: {
-        data: doc
+        doc
       }
     });
   });

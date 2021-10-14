@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controller/userController');
 const authController = require('../controller/authController');
+const multerFactory = require('../controller/multerFactory');
 
 const router = express.Router();
 // signup / login / update password / forget password / get me / update me
@@ -23,10 +24,11 @@ router.patch('/deleteMe', userController.deleteMe);
 // updating user by itself
 router.patch(
   '/updateMe',
-  userController.uploadeUserPhoto,
-  userController.resizeuserPhoto,
+  multerFactory.uploadeUserPhoto,
+  multerFactory.resizeuserPhoto('user'),
   userController.updateMe
 );
+
 // admin should have permission for this route
 router.use(authController.restrictTo('admin'));
 router
